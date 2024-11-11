@@ -1,5 +1,5 @@
-import timeit
-
+import random
+import time
 
 # Optimized Python program for implementation of Bubble Sort
 def bubbleSort(arr):
@@ -20,13 +20,22 @@ def bubbleSort(arr):
                 swapped = True
         if (swapped == False):
             break
-
 # Driver code to test above
 if __name__ == "__main__":
-    arr = [64, 34, 25, 12, 22, 11, 90]
+    arr = [364, 283, 153, 168, 980, 126, 174, 896, 251, 863, 411, 405, 436, 141, 186, 783, 719, 381, 670, 803, 122, 349, 736, 121, 870, 143, 640, 451, 430, 368, 216, 118, 53, 349, 268, 591, 204, 439, 609, 759, 257, 907, 423, 166, 101, 952, 460, 537, 456, 720, 381, 415, 745, 339, 567, 1000, 355, 362, 124, 458, 517, 560, 541, 753, 119, 103, 141, 442, 357, 499, 772, 441, 919, 349, 890, 915, 992, 113, 727, 377, 435, 101, 905, 963, 270, 283, 72, 514, 878, 469, 745, 352, 498, 876, 924, 916, 968, 954, 410, 493, 852, 489, 493, 635, 632, 752, 179, 104, 928, 207]
+    #[random.randint(1, 1000) for _ in range(300)]
+
+    start_time = time.perf_counter()
 
     bubbleSort(arr)
+
+    end_time = time.perf_counter()
+
+    time_taken = end_time - start_time
 
     print("Sorted array:")
     for i in range(len(arr)):
         print("%d" % arr[i], end=" ")
+
+    print(f"Time taken to sort: {time_taken} seconds")
+
