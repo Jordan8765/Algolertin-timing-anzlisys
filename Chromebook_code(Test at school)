@@ -1,0 +1,115 @@
+import random
+import time
+import csv
+
+# Optimized Bubble Sort implementation
+def bubbleSort(arr):
+    cmp_count, swap_count = 0, 0
+    n = len(arr)
+
+    # Traverse through all array elements
+    for i in range(n):
+        swapped = False
+
+        # Last i elements are already in place
+        for j in range(0, n-i-1):
+            cmp_count += 1
+            # Swap if the element found is greater
+            # than the next element
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+                swapped = True
+                swap_count += 1
+
+        if not swapped:
+            break
+
+    return cmp_count, swap_count
+
+
+# Counting Sort used for Radix Sort
+def countingSort(arr, place):
+    size = len(arr)
+    output = [0] * size
+    count = [0] * 10
+
+    # Calculate count of elements
+    for i in range(0, size):
+        index = arr[i] // place
+        count[index % 10] += 1
+
+    # Calculate cumulative count
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+
+    # Place the elements in sorted order
+    i = size - 1
+    while i >= 0:
+        index = arr[i] // place
+        output[count[index % 10] - 1] = arr[i]
+        count[index % 10] -= 1
+        i -= 1
+
+    for i in range(0, size):
+        arr[i] = output[i]
+
+
+# Radix Sort implementation
+def radixSort(arr):
+    max_element = max(arr)
+    place = 1
+    while max_element // place > 0:
+        countingSort(arr, place)
+        place *= 10
+    return arr
+
+
+# Timing function for sorting algorithms
+def time_sort(sort_func, arr):
+    start_time = time.time()
+    sort_func(arr.copy())  # Make a copy to avoid modifying the original array
+    return time.time() - start_time
+
+
+# Function to time sorting algorithms with multiple trials
+def time_sorting_algorithm(sort_func, arr, trials=5):
+    total_time = sum(time_sort(sort_func, arr) for _ in range(trials))
+    return total_time / trials
+
+
+# Function to run sorting trials (100 and 1000 times) and log times to CSV
+def run_trials_and_log(arr, csv_filename):
+    # Prepare the CSV file with headers
+    with open(csv_filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Trial', 'Bubble Sort Time (sec)', 'Radix Sort Time (sec)'])
+
+        # Run trials 100 times
+        for trial in range(1, 101):
+            bubbleSort_time = time_sorting_algorithm(bubbleSort, arr, trials=1)
+            radixSort_time = time_sorting_algorithm(radixSort, arr, trials=1)
+            writer.writerow([trial, bubbleSort_time, radixSort_time])
+            print(f"Trial {trial} - Bubble Sort: {bubbleSort_time:.6f} seconds, Radix Sort: {radixSort_time:.6f} seconds")
+
+        # Run trials 1000 times
+        for trial in range(101, 1001):
+            bubbleSort_time = time_sorting_algorithm(bubbleSort, arr, trials=1)
+            radixSort_time = time_sorting_algorithm(radixSort, arr, trials=1)
+            writer.writerow([trial, bubbleSort_time, radixSort_time])
+            print(f"Trial {trial} - Bubble Sort: {bubbleSort_time:.6f} seconds, Radix Sort: {radixSort_time:.6f} seconds")
+
+
+# Main function to test the sorting algorithms
+if __name__ == "__main__":
+    arr = [99907, 87435, 23432, 58131, 21287, 41203, 36905, 98647, 55180, 77793,
+           85202, 34391, 54322, 23871, 27638, 24792, 22107, 18321, 41357, 43884,
+           10264, 38507, 10981, 59129, 10312, 72187, 40477, 22077, 93562, 57228,
+           18392, 56061, 73502, 10572, 68695, 27814, 43071, 59144, 89714, 56358,
+           35844, 26192, 95062, 90189, 15479, 97889, 77368, 69293, 74618, 18673,
+           50996, 94895, 67456, 79826, 45202, 36947, 92583, 28581, 87631, 64327,
+           78792, 18151, 26185, 28996, 67217, 31541, 51846, 51424, 66594, 15850]
+
+    csv_filename = 'sorting_times.csv'
+
+    # Run the trials and log the times to CSV
+    run_trials_and_log(arr, csv_filename)
